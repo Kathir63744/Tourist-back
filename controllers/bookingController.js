@@ -165,3 +165,10 @@ exports.createBooking = async (req, res) => {
     });
   }
 };
+
+exports.checkAvailability = async (req, res) => {
+  res.json({
+    success: true,
+    message: "Availability check working"
+  });
+};
