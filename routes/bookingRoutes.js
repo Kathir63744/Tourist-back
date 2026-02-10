@@ -12,11 +12,7 @@ router.get('/check/availability', bookingController.checkAvailability);
 router.get('/test', (req, res) => {
   res.json({
     success: true,
-    message: 'Booking API is working',
-    endpoints: {
-      create: 'POST /api/bookings',
-      check: 'GET /api/bookings/check/availability'
-    }
+    message: 'Booking API is working'
   });
 });
 
