@@ -50,6 +50,7 @@ router.get('/callback', async (req, res) => {
     // Store tokens with user ID
     const userId = userInfo.data.id;
     const userEmail = userInfo.data.email;
+    const { OAuth2Client } = require('google-auth-library');
     
     storeUserEmail(userId, userEmail, tokens);
     
@@ -105,6 +106,47 @@ router.get('/status/:userId', (req, res) => {
     connected: !!userData,
     email: userData || null
   });
+});
+
+router.post('/google-login', async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    
+    // Verify the token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID, // Same as frontend
+    });
+    
+    const payload = ticket.getPayload();
+    
+    // Create user session
+    const user = {
+      id: payload.sub,
+      email: payload.email,
+      name: payload.name,
+      picture: payload.picture,
+    };
+    
+    // Create JWT for your app
+    const appToken = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    res.json({
+      success: true,
+      token: appToken,
+      user
+    });
+    
+  } catch (error) {
+    console.error('Google login error:', error);
+    res.status(401).json({ error: 'Authentication failed' });
+  }
 });
 
 module.exports = router;

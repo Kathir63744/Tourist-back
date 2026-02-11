@@ -12,7 +12,8 @@ router.get('/check/availability', bookingController.checkAvailability);
 router.get('/test', (req, res) => {
   res.json({
     success: true,
-    message: 'Booking API is working'
+    message: 'Booking API is working',
+    timestamp: new Date().toISOString()
   });
 });
 
