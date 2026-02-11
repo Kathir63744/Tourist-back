@@ -1,12 +1,20 @@
 const nodemailer = require('nodemailer');
 
-// Create Gmail transporter
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // your Gmail
-    pass: process.env.EMAIL_PASS  // 16-digit app password
+    user: process.env.EMAIL_USER, // tourfinder997@gmail.com
+    pass: process.env.EMAIL_PASS  // rewd degc wdds xqbj
   }
+});
+
+// In sendEmail function:
+const info = await transporter.sendMail({
+  from: `"HillEscape Resorts" <${process.env.EMAIL_USER}>`, // tourfinder997@gmail.com
+  to: to,
+  subject: subject,
+  html: generateEmailHTML(bookingData),
+  replyTo: process.env.EMAIL_USER
 });
 
 // Verify connection on startup
